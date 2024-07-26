@@ -1,29 +1,47 @@
 import { CardProps } from "../type/CardType"
 import { FC } from "react"
-
-
+import { Button, Typography, Box } from "@mui/material"
+import { toast } from "react-toastify"
+import 'react-toastify/dist/ReactToastify.css';
 
 const Card:FC<CardProps> = (props) => {
 
-    const {cardData} = props
+    const {cardData, inCart} = props
+
+    const notify = () => toast.success("Добавленно в корзину");
+    const notifyDelete = () => toast.error("Удалено из корзины");
 
     const handleAddToCart = () => {
-        const currentData =localStorage.getItem('cartData') ? [...JSON.parse(localStorage.getItem('cartData'))] : []
+        const currentData =localStorage.getItem('cartData') ? [...JSON.parse(localStorage.getItem('cartData')  || "")] : []
         currentData?.push(cardData)
         localStorage.setItem('cartData', JSON.stringify(currentData))
+        notify()
+    }
+    
+    const handleDeleteFromCard = () => {
+        const currentData =localStorage.getItem('cartData') ? [...JSON.parse(localStorage.getItem('cartData')  || "")] : []
+        const filtredCart = currentData.filter((item) => (cardData.id !== item.id))
+        localStorage.setItem('cartData', JSON.stringify(filtredCart))
+        notifyDelete()
     }
     return (
-        <div>
-            <p>{cardData.title}</p>
-            <p>{cardData.id}</p>
-            <button onClick={handleAddToCart}>Добавить в корзину</button>
-        </div>
+        <Box sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            width: '200px',
+            justifyContent: "space-between",
+            border: '1px solid',
+            borderRadius: '8px',
+            padding: '8px 16px'
+        }}>
+            <Typography>{cardData.title}</Typography>
+            <Typography>{cardData.id}</Typography>
+            {inCart ? 
+                <Button onClick={handleDeleteFromCard}>Удалить из корзины</Button> : 
+                <Button variant="contained" onClick={handleAddToCart}>Добавить в корзину</Button>
+            }
+        </Box>
     )
 }
 
 export default Card
-
-
-// [1, 2, 3]
-// push(4) => [1, 2, 3, 4]
-// push(2) => [1, 3, 4]

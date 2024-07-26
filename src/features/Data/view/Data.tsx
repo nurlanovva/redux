@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, RootState } from "../../../app/store"
 import { fetchTodo } from "../model/dataSlice"
 import Card from "../../../shared/UI/Card"
+import { Box } from "@mui/material"
 
 const Data = () => {
 
@@ -14,11 +15,11 @@ const Data = () => {
 
     const { todo } = useSelector((state: RootState) => state.todo)
     return(
-        <>{
-        todo?.map((item) => (
-            <Card key={item.id} cardData={item} />
-        ))
-        }</>
+        <Box sx={{display: 'flex', gap: '24px', flexWrap: "wrap"}}>{
+            todo?.map((item) => (
+                <Card key={item.id} cardData={item} />
+            ))
+        }</Box>
     )
 }
 
