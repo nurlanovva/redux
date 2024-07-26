@@ -1,11 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-
-
-interface ToDoState{
-    todo: any
-    status: string
-    error: string | null
-}
+import { ToDoState } from "../type/dataType";
+import axios from "axios";
 
 const initialState: ToDoState = {
     todo: null,
@@ -16,12 +11,10 @@ const initialState: ToDoState = {
 export const fetchTodo = createAsyncThunk(
     'todos/fetchTodo',
     async () => {
-        const res = await fetch('https://jsonplaceholder.typicode.com/todos/1')
-        // const data = await res.json()
-        return res
+        const res = await axios.get('https://jsonplaceholder.typicode.com/todos/')
+        return res.data
     }
 )
-
 
 const todoSlice = createSlice({
     name: "todos",
@@ -29,8 +22,16 @@ const todoSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
+            .addCase(fetchTodo.pending, (state) => {
+                state.status = 'loading'
+            })
             .addCase(fetchTodo.fulfilled, (state, action) => {
                 state.todo = action.payload
+                state.status = 'success'
+            })
+            .addCase(fetchTodo.rejected, (state, action) => {
+                state.error = action.error.message
+                state.status = 'error'
             })
     }
 })

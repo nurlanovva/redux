@@ -1,4 +1,3 @@
-import Counter from "./features/Counter"
 import Data from "./features/Data"
 
 function App() {
@@ -6,7 +5,6 @@ function App() {
 
   return (
     <>
-    <Counter />
     <Data />
     </>
   )
